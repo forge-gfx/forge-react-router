@@ -8,3 +8,7 @@ A basic example of using Forge in a React app using React Router v7 framework mo
 npm install
 npm run dev
 ```
+
+## Notes
+
+We use React Router's [client modules](https://reactrouter.com/explanation/special-files#client-modules) with the `*.client.tsx` file name convention to import and extend Forge components. This is necessary if you enable React Router's server-side rendering and you are using a Node version older than 21. Specifically, you may need to use `*.client.tsx` because the [`Navigator`](https://nodejs.org/api/globals.html#navigator) API is referenced by Forge and is not available in Node before version 21.
