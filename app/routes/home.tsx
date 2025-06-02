@@ -3,8 +3,8 @@ import { SplatMesh } from "~/components/forge/SplatMesh.client";
 import { CameraControls } from "@react-three/drei";
 import { useThree } from "@react-three/fiber";
 import { ForgeRenderer } from "~/components/forge/ForgeRenderer.client";
-import { useRef } from "react";
-import type { SplatMesh as ForgeSplatMesh } from "@worldlabsai/forge";
+import { useMemo, useRef } from "react";
+import type { SplatMesh as ForgeSplatMesh } from "@forge-gfx/forge";
 
 export function meta() {
   return [
@@ -33,6 +33,20 @@ const Scene = () => {
   const renderer = useThree((state) => state.gl);
   const meshRef = useRef<ForgeSplatMesh>(null);
 
+  // Memoize the elements inside the `<ForgeRenderer />` `args` prop so that we don't re-create the `<ForgeRenderer />` on every render
+  const forgeRendererArgs = useMemo(() => {
+    return { renderer };
+  }, [renderer]);
+
+  // Memoize the `SplatMesh` `args` prop so that we don't re-create the `SplatMesh` on every render
+  const splatMeshArgs = useMemo(
+    () =>
+      ({
+        url: "/assets/splats/butterfly.spz",
+      }) as const,
+    [],
+  );
+
   useFrame((_, delta) => {
     if (meshRef.current) {
       meshRef.current.rotation.y += 0.5 * delta;
@@ -42,13 +56,10 @@ const Scene = () => {
   return (
     <>
       <CameraControls />
-      <ForgeRenderer args={[{ renderer }]}>
+      <ForgeRenderer args={[forgeRendererArgs]}>
         {/* This particular splat mesh is upside down */}
         <group rotation={[Math.PI, 0, 0]}>
-          <SplatMesh
-            ref={meshRef}
-            args={[{ url: "/assets/splats/butterfly.wlg" }]}
-          />
+          <SplatMesh ref={meshRef} args={[splatMeshArgs]} />
         </group>
       </ForgeRenderer>
     </>
