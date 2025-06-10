@@ -1,17 +1,17 @@
 import { Canvas, useFrame } from "@react-three/fiber";
-import { SplatMesh } from "~/components/forge/SplatMesh.client";
+import { SplatMesh } from "~/components/spark/SplatMesh.client";
 import { CameraControls } from "@react-three/drei";
 import { useThree } from "@react-three/fiber";
-import { ForgeRenderer } from "~/components/forge/ForgeRenderer.client";
+import { SparkRenderer } from "~/components/spark/SparkRenderer.client";
 import { useMemo, useRef } from "react";
-import type { SplatMesh as ForgeSplatMesh } from "@forge-gfx/forge";
+import type { SplatMesh as SparkSplatMesh } from "@sparkjsdev/spark";
 
 export function meta() {
   return [
-    { title: "React Router | Forge" },
+    { title: "React Router | Spark" },
     {
       name: "description",
-      content: "A basic example of Forge with React Router v7",
+      content: "A basic example of Spark with React Router v7",
     },
   ];
 }
@@ -31,10 +31,10 @@ export default function Home() {
  */
 const Scene = () => {
   const renderer = useThree((state) => state.gl);
-  const meshRef = useRef<ForgeSplatMesh>(null);
+  const meshRef = useRef<SparkSplatMesh>(null);
 
-  // Memoize the elements inside the `<ForgeRenderer />` `args` prop so that we don't re-create the `<ForgeRenderer />` on every render
-  const forgeRendererArgs = useMemo(() => {
+  // Memoize the elements inside the `<SparkRenderer />` `args` prop so that we don't re-create the `<SparkRenderer />` on every render
+  const sparkRendererArgs = useMemo(() => {
     return { renderer };
   }, [renderer]);
 
@@ -56,12 +56,12 @@ const Scene = () => {
   return (
     <>
       <CameraControls />
-      <ForgeRenderer args={[forgeRendererArgs]}>
+      <SparkRenderer args={[sparkRendererArgs]}>
         {/* This particular splat mesh is upside down */}
         <group rotation={[Math.PI, 0, 0]}>
           <SplatMesh ref={meshRef} args={[splatMeshArgs]} />
         </group>
-      </ForgeRenderer>
+      </SparkRenderer>
     </>
   );
 };
